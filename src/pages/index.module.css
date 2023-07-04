@@ -11,7 +11,7 @@
 }
 
 .hero--primary {
-  --ifm-hero-background-color: "#2B408A";
+  background-color: "#2B408A";
 }
 
 @media screen and (max-width: 996px) {
