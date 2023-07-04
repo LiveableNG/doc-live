@@ -2,150 +2,106 @@
 sidebar_position: 1
 ---
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
 # Verify Tenants
 
-Docusaurus supports **[Markdown](https://daringfireball.net/projects/markdown/syntax)** and a few **additional features**.
+:::tip In a nutshell
 
-## Front Matter
+To accept a payment, create a transaction using our API, our client Javascript library, Popup JS, or our SDKs. Every transaction includes a link that can be used to complete payment.
 
-Markdown documents have metadata at the top called [Front Matter](https://jekyllrb.com/docs/front-matter/):
+:::
 
-```text title="my-doc.md"
-// highlight-start
----
-id: my-doc-id
-title: My document title
-description: My document description
-slug: /my-custom-url
----
-// highlight-end
+## Popup
 
-## Markdown heading
+Paystack Popup provides a simple and convenient payment flow for web. It can be integrated in five easy steps, making it the easiest way to start accepting payments. See demo of the payment methods on the [checkout here](https://jekyllrb.com/docs/front-matter/).
 
-Markdown text with [links](./hello.md)
+### Collect customer information
+
+To initialize the transaction, you need to pass information such as email, amount, transaction reference, etc. The `key`, `email` and `amount` parameters are the only required parameters. The table below lists the parameters that you can pass when initializing a transaction.
+
+| Param  | Required? | Description                                                                                                                          |
+| ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| key    | Yes       | Your public key from Paystack. Use test key for test mode and live key for live mode                                                 |
+| email  | Yes       | Email address of customer                                                                                                            |
+| amount | Yes       | Amount (in the lowest currency value - kobo, pesewas or cent) you are debiting customer. Do not pass this if creating subscriptions. |
+
+The customer information can be retrieved from your database if you already have it stored, or from a form like in the example below:
+
+<Tabs
+defaultValue="html"
+values={[
+{label: 'HTML', value: 'html'},
+{label: 'JavaScript', value: 'javascript'},
+]}>
+<TabItem value="html">
+
+```html
+<form id="paymentForm">
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input type="email" id="email-address" required />
+  </div>
+  <div class="form-group">
+    <label for="amount">Amount</label>
+    <input type="tel" id="amount" required />
+  </div>
+  <div class="form-group">
+    <label for="first-name">First Name</label>
+    <input type="text" id="first-name" />
+  </div>
+  <div class="form-group">
+    <label for="last-name">Last Name</label>
+    <input type="text" id="last-name" />
+  </div>
+  <div class="form-submit">
+    <button type="submit" onclick="payWithPaystack()">Pay</button>
+  </div>
+</form>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
 ```
 
-## Links
+</TabItem>
 
-Regular Markdown links are supported, using url paths or relative file paths.
+<TabItem value="javascript">
 
-```md
-Let's see how to [Create a page](/create-a-page).
-```
+```javascript
+const paymentForm = document.getElementById("paymentForm");
+paymentForm.addEventListener("submit", payWithPaystack, false);
 
-```md
-Let's see how to [Create a page](./create-a-page.md).
-```
+function payWithPaystack(e) {
+  e.preventDefault();
 
-**Result:** Let's see how to [Create a page](./create-a-page.md).
+  let handler = PaystackPop.setup({
+    key: "pk_test_xxxxxxxxxx", // Replace with your public key
+    email: document.getElementById("email-address").value,
+    amount: document.getElementById("amount").value * 100,
+    ref: "" + Math.floor(Math.random() * 1000000000 + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+    // label: "Optional string that replaces customer email"
+    onClose: function () {
+      alert("Window closed.");
+    },
+    callback: function (response) {
+      let message = "Payment complete! Reference: " + response.reference;
+      alert(message);
+    },
+  });
 
-## Images
-
-Regular Markdown images are supported.
-
-You can use absolute paths to reference images in the static directory (`static/img/docusaurus.png`):
-
-```md
-![Docusaurus logo](/img/docusaurus.png)
-```
-
-![Docusaurus logo](/img/docusaurus.png)
-
-You can reference images relative to the current file as well. This is particularly useful to colocate images close to the Markdown files using them:
-
-```md
-![Docusaurus logo](./img/docusaurus.png)
-```
-
-## Code Blocks
-
-Markdown code blocks are supported with Syntax highlighting.
-
-    ```jsx title="src/components/HelloDocusaurus.js"
-    function HelloDocusaurus() {
-        return (
-            <h1>Hello, Docusaurus!</h1>
-        )
-    }
-    ```
-
-```jsx title="src/components/HelloDocusaurus.js"
-function HelloDocusaurus() {
-  return <h1>Hello, Docusaurus!</h1>;
+  handler.openIframe();
 }
 ```
 
-## Admonitions
+</TabItem>
+</Tabs>
 
-Docusaurus has a special syntax to create admonitions and callouts:
+In this sample, notice how:
 
-    :::tip My tip
+1. The Paystack inline javascript is included using a script tag. This is how you import Paystack into your code.
+2. The amount here can be hardcoded if you want to charge a specific amount.
+3. The Pay button has been tied to an onClick function called payWithPaystack. This is the action that causes the Paystack popup to load.
 
-    Use this awesome feature option
+:::tip Helpful Tip
 
-    :::
-
-    :::danger Take care
-
-    This action is dangerous
-
-    :::
-
-:::tip My tip
-
-Use this awesome feature option
-
-:::
-
-:::danger Take care
-
-This action is dangerous
-
-:::
-
-## MDX and React Components
-
-[MDX](https://mdxjs.com/) can make your documentation more **interactive** and allows using any **React components inside Markdown**:
-
-```jsx
-export const Highlight = ({children, color}) => (
-  <span
-    style={{
-      backgroundColor: color,
-      borderRadius: '20px',
-      color: '#fff',
-      padding: '10px',
-      cursor: 'pointer',
-    }}
-    onClick={() => {
-      alert(`You clicked the color ${color} with label ${children}`)
-    }}>
-    {children}
-  </span>
-);
-
-This is <Highlight color="#25c2a0">Docusaurus green</Highlight> !
-
-This is <Highlight color="#1877F2">Facebook blue</Highlight> !
-```
-
-export const Highlight = ({ children, color }) => (
-  <span
-    style={{
-      backgroundColor: color,
-      borderRadius: "20px",
-      color: "#fff",
-      padding: "10px",
-      cursor: "pointer",
-    }}
-    onClick={() => {
-      alert(`You clicked the color ${color} with label ${children}`);
-    }}
-  >
-    {children}
-  </span>
-);
-
-This is <Highlight color="#25c2a0">Docusaurus green</Highlight> !
-
-This is <Highlight color="#1877F2">Facebook blue</Highlight> !
+If you don't collect email addresses from your customer, you can generate an email address using the information you have alongside your website url. E.g, if you only collect phone numbers from your customers, you can create email addresses like 080300000@mybusiness.com.
