@@ -1,0 +1,57 @@
+---
+sidebar_position: 5
+sidebar_label: Checksum
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import PopupExImageUrl from "@site/static/img/popup-ex.png";
+
+# Checksum
+
+Good Tenants ensures secure verification of users on the client side by using a hashed value in a field called `payload_hash`.
+This hash is created by encrypting some immutable values in your request. We compute the hash at runtime and compare it to the value that has been passed in your request to ensure that the verficiation is secure.
+
+:::tip In a nutshell
+
+If you are making a tenant verification using Good Tenants Popup via any of these integration methods ([Inline](/docs/guides/tenant-verification-inline)), ensure that you pass the hash in all your requests.
+
+:::
+
+<Tabs
+defaultValue="fullRequest"
+values={[
+{label: 'Full Request', value: 'fullRequest'},
+]}>
+<TabItem value="fullRequest">
+
+```html
+<button onclick="beginVerification()">Begin Verification</button>
+
+<script src="https://js.goodtenants.ng/popup.js"></script>
+<script>
+  function beginVerification() {
+    Verification.setup({
+      first_name: "John",
+      last_name: "Doe",
+      email: "client@goodtenants.ng",
+      key: "pk_test_....",
+      onClose: function () {
+        console.log("Closed");
+      },
+      callback: function (data) {
+        console.log(data);
+      },
+    });
+  }
+</script>
+```
+
+</TabItem>
+
+</Tabs>
+
+If any value in the payload is tampered with, causing it to be inconsistent with the generated hash,
+we will return an error message to the customer on the Good Tenants Popup once the form is submitted.
+
+<img src={PopupExImageUrl} />

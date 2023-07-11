@@ -6,16 +6,16 @@ import {
 
 export default function QuickStartSection({ title, className }) {
   return (
-    <Section title={title} className={className}>
+    <Section  className={className}>
       <Card
-        title="👩‍💻 Tenant Verification"
-        description="Verify the information provided by your prospective tenants."
-        to="/docs/tenants/tenant-verification"
+        title="👩‍💻 Quick Start"
+        description="Let’s get you verified information provided by your prospective tenants."
+        to="/docs/integration-guides/quick-start"
       />
       <Card
-        title="👋 Find Tenant"
-        description="Quickly discover tenant for your properties."
-        to="/docs/tenants/find-tenant"
+        title="👋 SDKs and Plugins"
+        description="Easily integrate Good Tenants with your platform using any of our SDKs."
+        to="/docs/integration-guides/find-tenant"
       />
     </Section>
   );

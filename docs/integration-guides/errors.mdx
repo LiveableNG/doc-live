@@ -1,0 +1,73 @@
+---
+sidebar_position: 4
+sidebar_label: Errors
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Errors
+
+When working with our API, you'll encounter four main kinds of errors: authorization errors, validation errors, server errors and Good Tenants errors.
+Each type of error comes with an appropriate HTTP status code.
+
+All errors share the same basic response format: a `status` key set to "error", and a `message` describing the error.
+There may also be a `data` object containing more details, for example:
+
+```js
+{
+    "status": "error",
+    "message": "secret key required",
+    "data": null
+}
+```
+
+### Authorization errors
+
+You'll get authorization errors when you don't provide your secret key to authorize an API call, or when the key provided isn't correct.
+They come with a **401 Unauthorized** status code:
+
+```js
+{
+    "status": "error",
+    "message": "Authorization required",
+    "data": null
+}
+```
+
+### Validation errors
+
+Validation errors are returned when your request fails one or more validation rules.
+Examples include not passing required parameters. They come with a **400 Bad Request** status code:
+
+```js
+{
+    "status": "error",
+    "message": "purpose is required",
+    "data": null
+}
+```
+
+### Server errors
+
+Server errors occur when something goes wrong on our end.
+In such a case, you should retry after a while, or reach out to our support.
+They come with a **500 Internal Server Error** status code.
+
+```js
+{
+  "error_id": "ERRNO796977608T1620310828419",
+  "message": "Application error. Please contact support",
+  "code": "app_error"
+}
+```
+
+### Good Tenants errors
+
+Good Tenants errors are typically returned when your request fails some limit / resource access / compliance checks.
+
+They come with a **400 Bad Request** status code. Here's a non-exhaustive list of some common error messages and their causes.
+
+| Error message        | Occurs when...                                                               |
+| -------------------- | ---------------------------------------------------------------------------- |
+| "API key is invalid" | This error occurs when an API key passed is an invalid or non-existent token |

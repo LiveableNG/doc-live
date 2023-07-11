@@ -1,0 +1,54 @@
+---
+sidebar_position: 2
+sidebar_label: Authentication
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import EmailExImageUrl from "@site/static/img/email-ex.png";
+
+# Authentication
+
+### Test Mode vs Live Mode
+
+There are two "modes" of operation for your Good Tenants account:
+
+1. **Live Mode:** Real transactions, real effects. Only switch to this after you've tested your integration thoroughly.
+
+2. **Test Mode:** No real transaction is involved. We'll still send email notifications, and most of the API functions the same.
+
+You can easily switch between Live and Test modes with the API keys sent to your mail.
+Test keys will always have `\_test` in the prefix (for example, `pk_test_aa06f088645a8f2516887347580721`)
+
+<img src={EmailExImageUrl} />
+
+### API keys
+
+When you create a Good Tenants account, you're given three kinds of API keys:
+
+1. **Secret key:** The most powerful type of key. It can authorize any action on your account, so it should never be exposed to the public.
+2. **Public key:** The key you'll use in "public" scenarios, such as in front-end JavaScript code (e.g. [Tenant Verification Inline](/docs/guides/tenant-verification-inline) ).
+
+To get your keys:
+
+- A mail will be sent with the title **Welcome to GoodTenants.io - Your API Keys for Seamless Integration**
+
+:::warning Don't take any chances
+
+If you think your keys may have been compromised (for instance, you accidentally committed them to Git), you should immediately reach to [support](/docs/integration-guides/support).
+
+This will invalidate all existing keys and give you a new set, and you can then update your app to use the new ones.
+
+:::
+
+### Authorizing API calls
+
+All API calls on Good Tenants are authenticated. API requests made without authorization will fail with the status code 401: Unauthorized.
+
+:::info Don't take any chances
+
+Your secret key can perform any actions on your Good Tenants account without restriction. It should be kept confidential and only stored on your servers, preferably as an environment variable.
+
+It should not be included in your Git repository or front-end JavaScript code.
+
+:::

@@ -1,0 +1,254 @@
+---
+sidebar_position: 4
+sidebar_label: Tenant Verification on your Nextjs App
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Tenant Verification on your Nextjs App
+
+:::tip In a nutshell
+
+Need to start verify tenants through your Nextjs app? In this article,
+we'll be exploring how to connect Tenant verification with your Nextjs app.
+We'll be using a sample tenant popup for our demo.
+
+:::
+
+## Introduction
+
+:::tip Before you begin
+
+You should [register your business with Good Tenants account](https://goodtenants.ng/).
+We'll provide you with test keys that you can use to make test your integration.
+
+:::
+
+We're going to use our public keys for this demo.
+To get your public key, once your business have been onboard, an email will be sent to registered email,
+stating your secret keys.
+
+You'll notice you have two public keys: Test and Live.
+While building your app, it's a good idea to use your test keys, as this will allow you to simulate transactions.
+Once your app is production-ready, you can switch over to your live keys.
+
+:::danger Never use secret keys on client-side
+
+Since this is a client-side integration, it means that our API keys will be exposed.
+To prevent anyone gaining access to our Good Tenants account,
+we want to make sure we're using our public keys.
+Secret keys should only ever be used on the server.
+
+:::
+
+### Project Setup
+
+If you’re already familiar with Nextjs, then this section would be pretty familiar to you and you can skip to the next section, Installing Paystack. If not, NextjsJS is a Javascript library used for building frontend applications. NPM and Yarn are popular installation methods when building large scale applications with Nextjs.
+
+<Tabs
+defaultValue="npm"
+values={[
+{label: 'npm', value: 'npm'},
+{label: 'yarn', value: 'yarn'},
+]}>
+<TabItem value="npm">
+
+```bash
+npm install -g @Nextjs/cli
+```
+
+</TabItem>
+
+<TabItem value="yarn">
+
+```bash
+yarn global add @Nextjs/cli
+```
+
+</TabItem>
+</Tabs>
+
+Once it’s installed, navigate to your desired folder and create a new Nextjs project;
+
+```bash
+Nextjs create project_name
+```
+
+The terminal would show you a couple of preset configurations, as a beginner, it’s recommended to choose the default. This would create a sample project `project_name` in the current directory. For the purpose of this guide, I’ll be creating a simple charity form to collect a user name, email address, and accepts payment from donors.
+
+Here’s my `App.Nextjs` snippet:
+
+```html
+<template>
+  <div id="app">
+    <section>
+      <h1>Lorem Ipsum Dolor Sit Amet</h1>
+      <div class="formcontainer">
+        <hr />
+        <div class="container">
+          <label for="uname">
+            <strong>Full Name</strong>
+          </label>
+          <input
+            v-model="full_name"
+            required
+            type="text"
+            placeholder="John Doe"
+            name="uname"
+          />
+          <label for="email">
+            <strong>Email Address</strong>
+          </label>
+          <input
+            v-model="email"
+            required
+            type="text"
+            placeholder="customer@email.com"
+            name="email"
+          />
+          <label for="amount">
+            <strong>Amount</strong>
+          </label>
+          <input
+            v-model="amount"
+            type="tel"
+            placeholder="1000"
+            name="amount"
+            required
+          />
+        </div>
+      </div>
+    </section>
+    <img style="max-width:200px;" alt="Nextjs logo" src="./assets/pstk.png" />
+  </div>
+</template>
+<script>
+  export default {
+    name: "App",
+    components: {},
+    data: () => {
+      return {
+        amount: 0,
+        full_name: "",
+        email: "",
+      };
+    },
+  };
+</script>
+```
+
+## Install Verification Package
+
+Now to add the [Verification package](https://www.npmjs.com/package/verification-package),
+this package contains the Paystack Inline JS library and the checkout as a single component.
+To add this plugin to your Nextjs project;
+
+<Tabs
+defaultValue="npm"
+values={[
+{label: 'npm', value: 'npm'},
+{label: 'yarn', value: 'yarn'},
+]}>
+<TabItem value="npm">
+
+```bash
+npm i verification-package --save
+```
+
+</TabItem>
+
+<TabItem value="yarn">
+
+```bash
+yarn add verification-package
+```
+
+</TabItem>
+</Tabs>
+
+Once it's installed, import the library into your App.Nextjs file like this
+
+```js
+<script>
+import paystack from 'Nextjs-paystack';
+
+export default {
+  name: "App",
+  components: {
+    paystack
+  },
+  data: () => {
+    return {
+      amount: null,
+      full_name: null,
+      email:null
+    };
+  }
+};
+</script>
+```
+
+Now the component is ready for you to use in the payment form.
+
+## Accept Payments
+
+Now let's add the component to the form. The Paystack component has 5 required props:
+
+**1. amount ** - The amount we're charging the customer
+**2. email ** - All transactions on Paystack require a customer's email address
+**3. paystackkey ** - Remember, public keys for client-side code always
+**4. callback ** - A function that will run after a successful transaction is completed
+**5. close ** - A function that will run when the customer closes the Paystack Checkout
+
+```js
+<paystack
+    :amount="amount * 100"
+    :email="email"
+    :paystackkey="PUBLIC_KEY"
+    :reference="reference"
+    :callback="processPayment"
+    :close="close"
+  >
+    Make Payment
+ </paystack>
+```
+
+:::tip Convert amount to a lower denomination
+
+The amount entered by the customer should be converted to kobo before it's submitted, this is done by simply multiplying the value by 100
+
+:::
+
+The unique reference field is auto generated, and the email and amount fields are collected from the user's input. Here are the callback methods:
+
+```js
+. . .
+
+computed: {
+   reference() {
+      let text = "";
+      let possible =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (let i = 0; i < 10; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      return text;
+    }
+  },
+  methods: {
+    processPayment: () => {
+      window.alert("Payment recieved")
+    },
+    close: () => {
+     console.log("You closed checkout page")
+    }
+  },
+
+. . .
+```
+
+There you have it, our payment integration is now complete. The full code sample is in this repository and you can check out the live demo.
+
+We also have another sample sneakers store built in Nextjs, here's the repository and live demo.

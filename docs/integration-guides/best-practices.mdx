@@ -1,0 +1,107 @@
+---
+sidebar_position: 6
+sidebar_label: Best Practices
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Integration Recommendations
+
+## Collecting Payments
+
+- Ensure you verify the details of the payment by comparing the amount, currency, transaction reference etc before you give value
+- Always implement webhooks when applicable
+- Ensure that you are not rate limited when checking the status of a transaction. Read more about our rate limits here
+
+## Making Payments
+
+- Ensure to handle Transfers and Virtual Cards asynchronously via webhooks
+
+## Error Handling
+
+- Ensure to cater for edge cases by only giving value or rendering service on a definite response as defined by the APIs
+- Ensure errors are “caught” and general error messages are shown to users in the worst case.
+
+## Validating Webhooks
+
+- We recommend the use of Secret Hash on your dashboard via Settings > Webhhoks in order to verify that the webhook was sent by Good Tenants
+
+## Security Recommendations
+
+### API Management
+
+Verify that your app meets these requirements for managing your API Keys
+
+- API Keys should not be hardcoded in the codebase.
+- API calls requiring your Good Tenants Secret Key should never be initiated from a Client (browser/mobile app). It should be done from the backend/server part of the application
+- API Keys should be stored in environmental variables or secrets manager.
+
+### Authentication
+
+- Ensure a strong password policy is enforced e.g. minimum of 8 alphanumeric characters, an upper case, a special character
+- Input validation is in place during login
+- Implement controls against brute-force - account lockouts, second-factor authentication and so on.
+- Store database credentials securely using secrets manager preferably.
+
+### Cookie Management
+
+- Ensure all app session cookies have the following attributes set
+  - Secure
+  - HTTPOnly
+- Upon the user logging out, the user’s session must be terminated server-side, and any client-side session tokens should be cleared and not cached on the user’s machine
+- Any session tokens must be stored within session cookies and transported only within HTTP cookie headers
+
+### Session Management
+
+- Session timeouts should be configured on the server
+- Session duration should be limited to a maximum of 10 hours, after which the user must be required to authenticate again
+- Implement an idle session timeout
+- Deny concurrent sessions
+- Ensure session tokens are generated using a Random Number Generator (RNG) cryptographic provider so it cannot be easily predictable.
+
+### Session Termination
+
+- A clearly accessible button must exist which allows users to log out of the application, which in turn ends the session on the server
+- Application sessions must be invalidated at the server-side
+  Log out function must effectively destroy all session tokens and render them useless.
+
+### Handling Sensitive Information
+
+- Securely exchange encryption keys - Ensure key exchanges are performed over a secure channel (TLS 1.2 and TLS 1.3)
+- Limit the use and storage of sensitive data - Ensure sensitive data are not unnecessarily transported and stored. Where possible use abstract identifiers to reduce data exposure risk.
+- Encryption of sensitive data at rest
+
+### Error Handling and Accountability
+
+- Ensure to log all privileged changes
+- Log all user (customer) and administrative activities
+- Log all access to sensitive data
+- When encountered with an unhandled exception, display generic messages to the end-user. Do not reveal details about the internal state of your application eg database errors, app server errors etc
+- Store logs securely and follow international standards for log retention
+
+### Input and Output Forms
+
+- All input (user and service) must be validated only on the server-side in addition to any client-side validation to permit only the characters required and field length necessary
+- All output back should be encoded
+- With proper input validation and output encoding, applications should not be susceptible to cross-site scripting, either stored or reflected. This includes all headers, cookies, query strings, form fields and hidden fields
+- Create a whitelist of acceptable characters to be used by the application
+- Ensure proper validation is done for files that are uploaded
+- Use parameterized SQL queries
+
+### Application Server
+
+- Ensure caching has been disabled on all SSL pages and all pages that contain sensitive data by using value no-cache and no-store instead of private in the Cache-Control header
+- All OS, web server and app server security patches are up to date at this time, and new patches are applied in a commercially reasonable timeframe after they are made available by the hardware and software vendors
+- SSL must be configured to support only TLS version 1.2 or higher.
+- HTTPS is enforced on all pages and endpoints of your application
+- The app web server must be configured to disable the TRACE and other HTTP methods if not being used
+
+### Vulnerability and Security Assessment
+
+Ensure your application is secured against this non-exhaustive list
+
+- Cross-Site Request Forgery
+- Cross-Site Scripting reflected and stored cross-site scripting
+- SQL Injection
+- XML Injection

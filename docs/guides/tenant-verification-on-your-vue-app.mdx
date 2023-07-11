@@ -1,16 +1,18 @@
 ---
-sidebar_position: 1
-sidebar_label: Accept Payments on your Vue App
+sidebar_position: 3
+sidebar_label: Tenant Verification on your Vue App
 ---
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
-# Accept Payments on your Vue App
+# Tenant Verification on your Vue App
 
 :::tip In a nutshell
 
-Need to start accepting payments through your Vue app? In this article, we'll be exploring how to connect Paystack with your Vue app. We'll be using a sample checkout page on a donation form for our demo
+Need to start verify tenants through your Vue app? In this article,
+we'll be exploring how to connect Tenant verification with your Vue app.
+We'll be using a sample tenant popup for our demo.
 
 :::
 
@@ -18,17 +20,25 @@ Need to start accepting payments through your Vue app? In this article, we'll be
 
 :::tip Before you begin
 
-You should [create a free Paystack account](http://sdhsdsd.com). We'll provide you with test keys that you can use to make test your integration.
+You should [register your business with Good Tenants account](https://goodtenants.ng/).
+We'll provide you with test keys that you can use to make test your integration.
 
 :::
 
-We're going to use our public keys for this demo. To get your public key, login into your Paystack dashboard and click on the Settings tab, and then click on API Keys & Webhooks.
+We're going to use our public keys for this demo.
+To get your public key, once your business have been onboard, an email will be sent to registered email,
+stating your secret keys.
 
-You'll notice you have two public keys: Test and Live. While building your app, it's a good idea to use your test keys, as this will allow you to simulate transactions. Once your app is production-ready, you can switch over to your live keys.
+You'll notice you have two public keys: Test and Live.
+While building your app, it's a good idea to use your test keys, as this will allow you to simulate transactions.
+Once your app is production-ready, you can switch over to your live keys.
 
 :::danger Never use secret keys on client-side
 
-Since this is a client-side integration, it means that our API keys will be exposed. To prevent anyone gaining access to our Paystack account, we want to make sure we're using our public keys. Secret keys should only ever be used on the server.
+Since this is a client-side integration, it means that our API keys will be exposed.
+To prevent anyone gaining access to our Good Tenants account,
+we want to make sure we're using our public keys.
+Secret keys should only ever be used on the server.
 
 :::
 
@@ -36,11 +46,28 @@ Since this is a client-side integration, it means that our API keys will be expo
 
 If you’re already familiar with Vue, then this section would be pretty familiar to you and you can skip to the next section, Installing Paystack. If not, VueJS is a Javascript library used for building frontend applications. NPM and Yarn are popular installation methods when building large scale applications with Vue.
 
+<Tabs
+defaultValue="npm"
+values={[
+{label: 'npm', value: 'npm'},
+{label: 'yarn', value: 'yarn'},
+]}>
+<TabItem value="npm">
+
 ```bash
 npm install -g @vue/cli
-# OR
+```
+
+</TabItem>
+
+<TabItem value="yarn">
+
+```bash
 yarn global add @vue/cli
 ```
+
+</TabItem>
+</Tabs>
 
 Once it’s installed, navigate to your desired folder and create a new Vue project;
 
@@ -111,13 +138,34 @@ Here’s my `App.vue` snippet:
 </script>
 ```
 
-## Install Paystack
+## Install Verification Package
 
-Now to add the [Paystack Vue package](http://sdsd.com), this package contains the Paystack Inline JS library and the checkout as a single component. To add this plugin to your vue project;
+Now to add the [Verification package](https://www.npmjs.com/package/verification-package),
+this package contains the Paystack Inline JS library and the checkout as a single component.
+To add this plugin to your vue project;
 
+<Tabs
+defaultValue="npm"
+values={[
+{label: 'npm', value: 'npm'},
+{label: 'yarn', value: 'yarn'},
+]}>
+<TabItem value="npm">
+
+```bash
+npm i verification-package --save
 ```
-npm install vue-paystack --save
+
+</TabItem>
+
+<TabItem value="yarn">
+
+```bash
+yarn add verification-package
 ```
+
+</TabItem>
+</Tabs>
 
 Once it's installed, import the library into your App.vue file like this
 
