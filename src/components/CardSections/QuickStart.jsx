@@ -15,7 +15,7 @@ export default function QuickStartSection({ title, className }) {
       <Card
         title="👋 SDKs and Plugins"
         description="Easily integrate Good Tenants with your platform using any of our SDKs."
-        to="/docs/integration-guides/find-tenant"
+        to="/docs/sdks-and-plugins/frontend-libraries"
       />
     </Section>
   );

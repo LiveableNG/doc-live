@@ -31,7 +31,7 @@ We're going to use our public keys for this demo.
 To get your public key, once your business have been onboard, an email will be sent to registered email,
 stating your secret keys.
 
-You'll notice you have two public keys: Test and Live.
+You'll notice you have two public keys: **Test** and **Live**.
 While building your app, it's a good idea to use your test keys, as this will allow you to simulate transactions.
 Once your app is production-ready, you can switch over to your live keys.
 
@@ -46,7 +46,9 @@ Secret keys should only ever be used on the server.
 
 ### Project Setup
 
-If you’re already familiar with React, then this section would be pretty familiar to you and you can skip to the next section, Installing Paystack. If not, ReactJS is a Javascript library used for building frontend applications. NPM and Yarn are popular installation methods when building large scale applications with React.
+If you’re already familiar with React, then this section would be pretty familiar to you and you can skip to the next section,
+Installing Verification package. If not, ReactJS is a Javascript library used for building frontend applications.
+NPM and Yarn are popular installation methods when building large scale applications with React.
 
 <Tabs
 defaultValue="npm"
@@ -65,85 +67,28 @@ npx create-react-app my-app
 <TabItem value="yarn">
 
 ```bash
-npx create-react-app my-app
+yarn create-react-app my-app
 ```
 
 </TabItem>
 </Tabs>
 
-Once it’s installed, navigate to your desired folder and create a new React project;
+The terminal would show you a couple of preset configurations, as a beginner,
+it’s recommended to choose the default.
+This would create a sample project called `my-app` in the current directory.
+
+Once it’s installed, navigate to `my-app` folder;
 
 ```bash
 cd my-app
 ```
 
-The terminal would show you a couple of preset configurations, as a beginner, it’s recommended to choose the default. This would create a sample project `project_name` in the current directory. For the purpose of this guide, I’ll be creating a simple charity form to collect a user name, email address, and accepts payment from donors.
-
-Here’s my `App.React` snippet:
-
-```html
-<template>
-  <div id="app">
-    <section>
-      <h1>Lorem Ipsum Dolor Sit Amet</h1>
-      <div class="formcontainer">
-        <hr />
-        <div class="container">
-          <label for="uname">
-            <strong>Full Name</strong>
-          </label>
-          <input
-            v-model="full_name"
-            required
-            type="text"
-            placeholder="John Doe"
-            name="uname"
-          />
-          <label for="email">
-            <strong>Email Address</strong>
-          </label>
-          <input
-            v-model="email"
-            required
-            type="text"
-            placeholder="customer@email.com"
-            name="email"
-          />
-          <label for="amount">
-            <strong>Amount</strong>
-          </label>
-          <input
-            v-model="amount"
-            type="tel"
-            placeholder="1000"
-            name="amount"
-            required
-          />
-        </div>
-      </div>
-    </section>
-    <img style="max-width:200px;" alt="React logo" src="./assets/pstk.png" />
-  </div>
-</template>
-<script>
-  export default {
-    name: "App",
-    components: {},
-    data: () => {
-      return {
-        amount: 0,
-        full_name: "",
-        email: "",
-      };
-    },
-  };
-</script>
-```
+For the purpose of this guide, I’ll be creating a simple button when clicked will popup verification form.
 
 ## Install Verification Package
 
 Now to add the [Verification package](https://www.npmjs.com/package/verification-package),
-this package contains the Paystack Inline JS library and the checkout as a single component.
+this package contains the Verfication Inline JS library as a single component.
 To add this plugin to your React project;
 
 <Tabs
@@ -169,29 +114,72 @@ yarn add verification-package
 </TabItem>
 </Tabs>
 
-Once it's installed, import the library into your App.React file like this
+Once it's installed, import the library into your App.js file like this
 
 ```js
-<script>
-import paystack from 'React-paystack';
+import "./App.css";
+import Verification from "verification-package";
 
-export default {
-  name: "App",
-  components: {
-    paystack
-  },
-  data: () => {
-    return {
-      amount: null,
-      full_name: null,
-      email:null
-    };
-  }
-};
-</script>
+function initVerification() {
+  Verification.setup({
+    first_name: "John",
+    last_name: "Doe",
+    email: "client@goodtenants.ng",
+    purpose: "residential",
+    key: "pk_test_....",
+    onClose: () => console.log("close"),
+    callback: () => console.log("success"),
+  });
+}
+
+function App() {
+  return (
+    <div className="App">
+      <p>Hello</p>
+      {initVerification()}
+    </div>
+  );
+}
+
+export default App;
 ```
 
-Now the component is ready for you to use in the payment form.
+Now the component is ready for you to use.
+
+### Start project
+
+<Tabs
+defaultValue="npm"
+values={[
+{label: 'npm', value: 'npm'},
+{label: 'yarn', value: 'yarn'},
+]}>
+<TabItem value="npm">
+
+```bash
+npm run start
+```
+
+</TabItem>
+
+<TabItem value="yarn">
+
+```bash
+yarn start
+```
+
+</TabItem>
+</Tabs>
+
+The Verification.setup has 7 required props:
+
+**1. first_name ** - The amount we're charging the customer
+**2. last_name ** - All transactions on Paystack require a customer's email address
+**3. email ** - Remember, public keys for client-side code always
+**4. purpose ** - Remember, public keys for client-side code always
+**5. key ** - Remember, public keys for client-side code always
+**6. close ** - A function that will run when the customer closes the Verfication Popup
+**7. callback ** - A function that will run after a successful Verfication is completed
 
 ## Accept Payments
 
