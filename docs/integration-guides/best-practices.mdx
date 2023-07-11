@@ -8,24 +8,14 @@ import TabItem from "@theme/TabItem";
 
 # Integration Recommendations
 
-## Collecting Payments
+## Making Tenants Verification
 
-- Ensure you verify the details of the payment by comparing the amount, currency, transaction reference etc before you give value
-- Always implement webhooks when applicable
-- Ensure that you are not rate limited when checking the status of a transaction. Read more about our rate limits here
-
-## Making Payments
-
-- Ensure to handle Transfers and Virtual Cards asynchronously via webhooks
+- Ensure to handle verification via popup.
 
 ## Error Handling
 
 - Ensure to cater for edge cases by only giving value or rendering service on a definite response as defined by the APIs
 - Ensure errors are “caught” and general error messages are shown to users in the worst case.
-
-## Validating Webhooks
-
-- We recommend the use of Secret Hash on your dashboard via Settings > Webhhoks in order to verify that the webhook was sent by Good Tenants
 
 ## Security Recommendations
 
