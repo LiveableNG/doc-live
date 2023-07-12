@@ -173,72 +173,15 @@ yarn start
 
 The Verification.setup has 7 required props:
 
-**1. first_name ** - The amount we're charging the customer
-**2. last_name ** - All transactions on Paystack require a customer's email address
-**3. email ** - Remember, public keys for client-side code always
-**4. purpose ** - Remember, public keys for client-side code always
-**5. key ** - Remember, public keys for client-side code always
-**6. close ** - A function that will run when the customer closes the Verfication Popup
-**7. callback ** - A function that will run after a successful Verfication is completed
+| Param      | Required? | Description                                                             |
+| ---------- | --------- | ----------------------------------------------------------------------- |
+| first_name | no        | Your first name                                                         |
+| last_name  | no        | Your last name                                                          |
+| email      | yes       | Email used for registeration                                            |
+| purpose    | yes       | If verification is for a residential or commercial                      |
+| key        | yes       | Remember, public keys for client-side code always                       |
+| close      | yes       | A function that will run when the customer closes the Verfication Popup |
+| callback   | yes       | A function that will run after a successful Verfication is completed    |
 
-## Accept Payments
-
-Now let's add the component to the form. The Paystack component has 5 required props:
-
-**1. amount ** - The amount we're charging the customer
-**2. email ** - All transactions on Paystack require a customer's email address
-**3. paystackkey ** - Remember, public keys for client-side code always
-**4. callback ** - A function that will run after a successful transaction is completed
-**5. close ** - A function that will run when the customer closes the Paystack Checkout
-
-```js
-<paystack
-    :amount="amount * 100"
-    :email="email"
-    :paystackkey="PUBLIC_KEY"
-    :reference="reference"
-    :callback="processPayment"
-    :close="close"
-  >
-    Make Payment
- </paystack>
-```
-
-:::tip Convert amount to a lower denomination
-
-The amount entered by the customer should be converted to kobo before it's submitted, this is done by simply multiplying the value by 100
-
-:::
-
-The unique reference field is auto generated, and the email and amount fields are collected from the user's input. Here are the callback methods:
-
-```js
-. . .
-
-computed: {
-   reference() {
-      let text = "";
-      let possible =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-      for (let i = 0; i < 10; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      return text;
-    }
-  },
-  methods: {
-    processPayment: () => {
-      window.alert("Payment recieved")
-    },
-    close: () => {
-     console.log("You closed checkout page")
-    }
-  },
-
-. . .
-```
-
-There you have it, our payment integration is now complete. The full code sample is in this repository and you can check out the live demo.
-
-We also have another sample sneakers store built in React, here's the repository and live demo.
+There you have it, our tenant verification integration is now complete.
+The full code sample is in this repository and you can check out the live demo.

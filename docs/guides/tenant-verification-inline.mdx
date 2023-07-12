@@ -10,14 +10,14 @@ import TabItem from "@theme/TabItem";
 
 Tenant Verification Inline is the easiest way to collect verify tenants on your website:
 Import our lightweight JavaScript library on your verification page,
-then call the Tenant Verification.setup() function when the customer clicks on your verify button.
+then call the Tenant **Verification.setup()** function when the customer clicks on your verify button.
 We'll handle the verficiation and return to you when it's done.
 
 In this guide, we'll walk you through using Tenant Verification Inline on your site.
 
 ## An example
 
-Here's what an implementation of Flutterwave Inline on a checkout page could look like:
+Here's what an implementation of Good Tenants Verficiation Inline on a page could look like:
 
 <iframe
   src="https://codepen.io/Goodtenants/embed/BaGJyXL?default-tab=html%2Cresult"
@@ -40,7 +40,7 @@ Here's what an implementation of Flutterwave Inline on a checkout page could loo
 
 Let's take a closer look at the key things this code does:
 
-- First, you include the Flutterwave Inline library with a script tag:
+- First, you include the Good Tenants Inline library with a script tag:
 
   ```html
   <script src="https://js.goodtenants.ng/popup.js"></script>
@@ -63,6 +63,7 @@ Let's take a closer look at the key things this code does:
     Verification.setup({
       first_name: "John",
       last_name: "Doe",
+      purpose: "residential",
       email: "client@goodtenants.ng",
       key: "pk_test_8c2a6db4d530d3b316885498579597",
       onClose: function () {
@@ -77,29 +78,32 @@ Let's take a closer look at the key things this code does:
 
 ### Calling `Verification.setup()`
 
-Let's take a closer look at the parameters we passed when calling `erification.setup`:
+Let's take a closer look at the parameters we passed when calling `verification.setup`:
+
+| Param      | Required? | Description                                                             |
+| ---------- | --------- | ----------------------------------------------------------------------- |
+| first_name | no        | Your first name                                                         |
+| last_name  | no        | Your last name                                                          |
+| email      | yes       | Email used for registeration                                            |
+| purpose    | yes       | If verification is for a residential or commercial                      |
+| key        | yes       | Remember, public keys for client-side code always                       |
+| close      | yes       | A function that will run when the customer closes the Verfication Popup |
+| callback   | yes       | A function that will run after a successful Verfication is completed    |
 
 ## Callbacks
 
 Alright, so now you've called Verification.setup(). What happens when the verification is done?
 
-### Callback
-
-In this case, you'll specify a JavaScript function that we'll call when the payment is done, passing in the payment object.
+In this case, you'll specify a JavaScript function that we'll call when the verfication is done, passing in the object.
 Here's what that object looks like:
 
 ```js
 {
-  "amount": 54600,
-  "currency": "NGN",
-  "customer": {
-    "name": "Rose DeWitt Bukater",
-    "email": "rose@unsinkableship.com",
-    "phone_number": "08102909304"
-  },
-  "flw_ref": "FLW-MOCK-597ae423f1470309edcb5879e3774bfa",
-  "status": "successful",
-  "tx_ref": "titanic-48981487343MDI0NzMx",
-  "transaction_id": 495000
+    "type": "complete-verification",
+    "payload": {
+        "reference": "GTVREF_2eEBoD60Pq",
+        "status": "success",
+        "message": "Processing"
+    }
 }
 ```

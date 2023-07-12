@@ -29,7 +29,7 @@ We're going to use our public keys for this demo.
 To get your public key, once your business have been onboard, an email will be sent to registered email,
 stating your secret keys.
 
-You'll notice you have two public keys: Test and Live.
+You'll notice you have two public keys: **Test** and **Live**.
 While building your app, it's a good idea to use your test keys, as this will allow you to simulate transactions.
 Once your app is production-ready, you can switch over to your live keys.
 
@@ -75,68 +75,8 @@ Once it’s installed, navigate to your desired folder and create a new Vue proj
 vue create project_name
 ```
 
-The terminal would show you a couple of preset configurations, as a beginner, it’s recommended to choose the default. This would create a sample project `project_name` in the current directory. For the purpose of this guide, I’ll be creating a simple charity form to collect a user name, email address, and accepts payment from donors.
-
-Here’s my `App.vue` snippet:
-
-```html
-<template>
-  <div id="app">
-    <section>
-      <h1>Lorem Ipsum Dolor Sit Amet</h1>
-      <div class="formcontainer">
-        <hr />
-        <div class="container">
-          <label for="uname">
-            <strong>Full Name</strong>
-          </label>
-          <input
-            v-model="full_name"
-            required
-            type="text"
-            placeholder="John Doe"
-            name="uname"
-          />
-          <label for="email">
-            <strong>Email Address</strong>
-          </label>
-          <input
-            v-model="email"
-            required
-            type="text"
-            placeholder="customer@email.com"
-            name="email"
-          />
-          <label for="amount">
-            <strong>Amount</strong>
-          </label>
-          <input
-            v-model="amount"
-            type="tel"
-            placeholder="1000"
-            name="amount"
-            required
-          />
-        </div>
-      </div>
-    </section>
-    <img style="max-width:200px;" alt="Vue logo" src="./assets/pstk.png" />
-  </div>
-</template>
-<script>
-  export default {
-    name: "App",
-    components: {},
-    data: () => {
-      return {
-        amount: 0,
-        full_name: "",
-        email: "",
-      };
-    },
-  };
-</script>
-```
+The terminal would show you a couple of preset configurations, as a beginner, it’s recommended to choose the default.
+This would create a sample project `project_name` in the current directory.
 
 ## Install Verification Package
 
@@ -167,88 +107,74 @@ yarn add verification-package
 </TabItem>
 </Tabs>
 
-Once it's installed, import the library into your App.vue file like this
+Once it's installed, open `HelloWorld.vue` file like this:
 
 ```js
+<template>
+  <div>
+    <button @click="initVerification">Click Me</button>
+  </div>
+</template>
+
 <script>
-import paystack from 'vue-paystack';
+import Verification from "verification-package";
 
 export default {
-  name: "App",
-  components: {
-    paystack
+  methods: {
+    initVerification() {
+      Verification.setup({
+        first_name: "john",
+        last_name: "doe",
+        email: "johndoe@mail.com",
+        purpose: "residential",
+        key: "pk_test_8c2a6db4d530d3b316885498579597",
+        onClose: () => console.log("close"),
+        callback: () => console.log("success"),
+      });
+    },
   },
-  data: () => {
-    return {
-      amount: null,
-      full_name: null,
-      email:null
-    };
-  }
 };
 </script>
 ```
 
-Now the component is ready for you to use in the payment form.
+Now the component is ready for you to use.
 
-## Accept Payments
+### Start project
 
-Now let's add the component to the form. The Paystack component has 5 required props:
+<Tabs
+defaultValue="npm"
+values={[
+{label: 'npm', value: 'npm'},
+{label: 'yarn', value: 'yarn'},
+]}>
+<TabItem value="npm">
 
-**1. amount ** - The amount we're charging the customer
-**2. email ** - All transactions on Paystack require a customer's email address
-**3. paystackkey ** - Remember, public keys for client-side code always
-**4. callback ** - A function that will run after a successful transaction is completed
-**5. close ** - A function that will run when the customer closes the Paystack Checkout
-
-```js
-<paystack
-    :amount="amount * 100"
-    :email="email"
-    :paystackkey="PUBLIC_KEY"
-    :reference="reference"
-    :callback="processPayment"
-    :close="close"
-  >
-    Make Payment
- </paystack>
+```bash
+npm run start
 ```
 
-:::tip Convert amount to a lower denomination
+</TabItem>
 
-The amount entered by the customer should be converted to kobo before it's submitted, this is done by simply multiplying the value by 100
+<TabItem value="yarn">
 
-:::
-
-The unique reference field is auto generated, and the email and amount fields are collected from the user's input. Here are the callback methods:
-
-```js
-. . .
-
-computed: {
-   reference() {
-      let text = "";
-      let possible =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-      for (let i = 0; i < 10; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      return text;
-    }
-  },
-  methods: {
-    processPayment: () => {
-      window.alert("Payment recieved")
-    },
-    close: () => {
-     console.log("You closed checkout page")
-    }
-  },
-
-. . .
+```bash
+yarn start
 ```
 
-There you have it, our payment integration is now complete. The full code sample is in this repository and you can check out the live demo.
+</TabItem>
+</Tabs>
 
-We also have another sample sneakers store built in Vue, here's the repository and live demo.
+The Verification.setup has 7 required props:
+
+| Param      | Required? | Description                                                             |
+| ---------- | --------- | ----------------------------------------------------------------------- |
+| first_name | no        | Your first name                                                         |
+| last_name  | no        | Your last name                                                          |
+| email      | yes       | Email used for registeration                                            |
+| purpose    | yes       | If verification is for a residential or commercial                      |
+| key        | yes       | Remember, public keys for client-side code always                       |
+| close      | yes       | A function that will run when the customer closes the Verfication Popup |
+| callback   | yes       | A function that will run after a successful Verfication is completed    |
+
+There you have it, our tenant verification integration is now complete.
+The full code sample is in this repository and you can check out the live demo.
