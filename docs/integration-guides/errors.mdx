@@ -27,18 +27,57 @@ There may also be a `data` object containing more details, for example:
 You'll get authorization errors when you don't provide your secret key to authorize an API call, or when the key provided isn't correct.
 They come with a **401 Unauthorized** status code:
 
+<Tabs
+defaultValue="response"
+values={[
+{label: 'Response', value: 'response'},
+{label: 'Request', value: 'request'},
+]}>
+<TabItem value="response">
+
 ```js
 {
     "status": "error",
-    "message": "Authorization required",
+    "message": "API Key is Invalid",
     "data": null
 }
 ```
+
+</TabItem>
+
+<TabItem value="request">
+
+```js
+Verification.setup({
+  first_name: "John",
+  last_name: "Doe",
+  email: "client@goodtenants.ng",
+  purpose: "residential",
+  key: "pk_test_aa06f088645a8f2516787327680822",
+  onClose: function () {
+    console.log("Closed");
+  },
+  callback: function (data) {
+    console.log(data);
+  },
+});
+```
+
+</TabItem>
+</Tabs>
 
 ### Validation errors
 
 Validation errors are returned when your request fails one or more validation rules.
 Examples include not passing required parameters. They come with a **400 Bad Request** status code:
+
+<Tabs
+defaultValue="response"
+values={[
+{label: 'Response', value: 'response'},
+{label: 'Request', value: 'request'},
+]}>
+<TabItem value="response">
 
 ```js
 {
@@ -47,6 +86,29 @@ Examples include not passing required parameters. They come with a **400 Bad Req
     "data": null
 }
 ```
+
+</TabItem>
+
+<TabItem value="request">
+
+```js
+Verification.setup({
+  first_name: "John",
+  last_name: "Doe",
+  email: "client@goodtenants.ng",
+  purpose: "",
+  key: "pk_test_aa06f088645a8f2516787327680822",
+  onClose: function () {
+    console.log("Closed");
+  },
+  callback: function (data) {
+    console.log(data);
+  },
+});
+```
+
+</TabItem>
+</Tabs>
 
 ### Server errors
 
